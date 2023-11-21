@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.constraint.Guideline
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/guideline"/>
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button5"/>
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button6"/>
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button7"/>
+        </TableRow>
+        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button10"/>
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button9"/>
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button8"/>
+        </TableRow>
+        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button11"/>
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button13"/>
+            <Button
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/button12"/>
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>

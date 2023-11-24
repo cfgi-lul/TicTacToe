@@ -50,13 +50,13 @@ namespace AndroidBlankApp1.TicTacToe
             if (this._board[0, 0] == this._board[1, 1] && this._board[2, 2] == this._board[1, 1] &&
                 this._board[1, 1] != BoardCellValue.Empty)
             {
-                return this._board[0, 0];
+                return this._board[1, 1];
             }
 
-            if (this._board[0, 2] == this._board[2, 2] && this._board[2, 0] == this._board[2, 2] &&
-                this._board[2, 1] != BoardCellValue.Empty)
+            if (this._board[0, 2] == this._board[1, 1] && this._board[2, 0] == this._board[1, 1] &&
+                this._board[1, 1] != BoardCellValue.Empty)
             {
-                return this._board[2, 2];
+                return this._board[1, 1];
             }
 
             return BoardCellValue.Empty;

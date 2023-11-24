@@ -1,5 +1,5 @@
-using System.Collections.Generic;
-using Android.Widget;
+using System.Reactive.Subjects;
+
 
 namespace AndroidBlankApp1.TicTacToe
 {
@@ -7,47 +7,30 @@ namespace AndroidBlankApp1.TicTacToe
     {
         private BoardCellValue _turn = BoardCellValue.O;
         private readonly Board _board = new Board();
-        private readonly List<Button> _gameFieldBtns;
-        private readonly TextView _gameTextView;
+        public string GameText { get; private set; } = "";
+        public BehaviorSubject<bool> GameRunning { get; } = new BehaviorSubject<bool>(false); 
 
-        public Game(List<Button> gameField, TextView gameTextView)
+        public BoardCellValue[,] GetBoard()
         {
-            this._gameFieldBtns = gameField;
-            this._gameTextView = gameTextView;
+            return this._board.GetBoard();
         }
 
         private void StartGame()
         {
-            this.AllowGameField();
-            this._gameTextView.Text = "Turn is " + this._turn;
+            this.GameText = "Turn is " + this._turn;
+            this.GameRunning.OnNext(true);
         }
 
         private void StopGame()
         {
-            this.DisableGameField();
+            this.GameRunning.OnNext(false);
         }
 
         public void ResetBoard()
         {
             this.StopGame();
             this._board.ClearBoard();
-            this.RenderBoard();
             this.StartGame();
-        }
-
-        public void RenderBoard()
-        {
-            var boardSnapshot = this._board.GetBoard();
-
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    this._gameFieldBtns[i * 3 + j].Text = boardSnapshot[j, i] == BoardCellValue.Empty
-                        ? ""
-                        : boardSnapshot[j, i].ToString();
-                }
-            }
         }
 
         private bool IsGameShouldBeStopped()
@@ -62,7 +45,7 @@ namespace AndroidBlankApp1.TicTacToe
             {
                 this._board.SetValueToPosition(_turn, position % 3, position / 3);
                 this._turn = this._turn == BoardCellValue.O ? BoardCellValue.X : BoardCellValue.O;
-                this._gameTextView.Text = "Turn is " + this._turn;
+                this.GameText = "Turn is " + this._turn;
             }
 
             if (this.IsGameShouldBeStopped())
@@ -70,25 +53,14 @@ namespace AndroidBlankApp1.TicTacToe
                 this.StopGame();
                 if (this._board.CheckWinner() != BoardCellValue.Empty)
                 {
-                    this._gameTextView.Text = "Winner is " +
-                                              (this._turn == BoardCellValue.O ? BoardCellValue.X : BoardCellValue.O);
+                    this.GameText = "Winner is " +
+                                         (this._turn == BoardCellValue.O ? BoardCellValue.X : BoardCellValue.O);
                 }
                 else
                 {
-                    this._gameTextView.Text = "It's a toe";
+                    this.GameText = "It's a toe";
                 }
             }
-            this.RenderBoard();
-        }
-        
-        private void DisableGameField()
-        {
-            this._gameFieldBtns.ForEach(x => x.Enabled = false);
-        }
-
-        private void AllowGameField()
-        {
-            this._gameFieldBtns.ForEach(x => x.Enabled = true);
         }
     }
 }

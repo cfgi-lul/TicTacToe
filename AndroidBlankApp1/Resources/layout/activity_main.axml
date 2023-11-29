@@ -4,8 +4,8 @@
                 android:layout_height="match_parent" android:gravity="center|center_horizontal">
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:gravity="center">
+            android:layout_width="393dp"
+            android:layout_height="675dp" android:gravity="center_horizontal|top">
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView3" android:textSize="34sp"
@@ -15,108 +15,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/textView2" android:textSize="34sp"
                 android:gravity="center"/>
-        <TableLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:paddingTop="24px" android:outlineProvider="none"
-                android:outlineSpotShadowColor="#FF2020" android:outlineAmbientShadowColor="#EA2525"
-                android:orientation="vertical">
-
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <Button
-                        android:layout_width="70dp"
-                        android:tag="0"
-                        android:onClick="BoardClickBtnHandler"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button1"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-                <Button
-                        android:layout_width="70dp"
-                        android:tag="1"
-                        android:onClick="BoardClickBtnHandler"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button2"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-                <Button
-                        android:layout_width="70dp"
-                        android:onClick="BoardClickBtnHandler"
-                        android:tag="2"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button3"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-            </TableRow>
-            <TableRow android:layout_width="wrap_content" android:layout_height="match_parent">
-                <Button
-                        android:layout_width="70dp"
-                        android:onClick="BoardClickBtnHandler"
-                        android:tag="3"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button4"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-                <Button
-                        android:layout_width="70dp"
-                        android:onClick="BoardClickBtnHandler"
-                        android:tag="4"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button5"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-                <Button
-                        android:layout_width="70dp"
-                        android:onClick="BoardClickBtnHandler"
-                        android:tag="5"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button6"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-            </TableRow>
-            <TableRow android:layout_width="wrap_content" android:layout_height="match_parent">
-                <Button
-                        android:layout_width="70dp"
-                        android:onClick="BoardClickBtnHandler"
-                        android:tag="6"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button7"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-                <Button
-                        android:layout_width="70dp"
-                        android:onClick="BoardClickBtnHandler"
-                        android:tag="7"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button8"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-                <Button
-                        android:layout_width="70dp"
-                        android:onClick="BoardClickBtnHandler"
-                        android:tag="8"
-                        android:layout_height="70dp"
-                        android:enabled="false"
-                        android:id="@+id/button9"
-                        android:textSize="34sp"
-                        android:gravity="center"/>
-            </TableRow>
-        </TableLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/boardLayout"
+                android:layout_width="match_parent"
+                android:layout_height="465dp" android:gravity="center|top"/>
+        <!--        </TableLayout>-->
         <Button
                 android:text="Start"
                 android:tag="8"
                 android:onClick="Reset"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="55dp"
                 android:id="@+id/button10"
-                android:layout_marginTop="200px"
                 android:textSize="24sp"/>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom|clip_horizontal">
+            <TextView
+                    android:text="difficulty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/textView" android:gravity="center"/>
+            <SeekBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="2"
+                    android:progress="0"
+                    android:id="@+id/seekBar3" android:indeterminate="false"/>
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -1,81 +1,166 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AndroidBlankApp1.TicTacToe
 {
     public class Board
     {
-        private  BoardCellValue[,] _board = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+        public int BoardResolution { get; }
+        private List<List<BoardCellValue>> _board;
+        private int _numInRowForWin;
 
-        public BoardCellValue[,] GetBoard()
+        public Board(int boardResolution)
         {
-            return this._board;
+            BoardResolution = boardResolution;
+            _board = new List<List<BoardCellValue>>(BoardResolution);
+            _numInRowForWin = boardResolution == 3 ? 3 : 4;
+            FillBoard();
+        }
+
+        private void FillBoard()
+        {
+            for (int i = 0; i < BoardResolution; i++)
+            {
+                _board.Add(new List<BoardCellValue>(BoardResolution));
+                for (int j = 0; j < BoardResolution; j++)
+                {
+                    _board[i].Add(BoardCellValue.Empty);
+                }
+            }
+        }
+
+        public List<List<BoardCellValue>> GetBoard()
+        {
+            return _board;
         }
 
         public void ClearBoard()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < BoardResolution; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < BoardResolution; j++)
                 {
-                    this._board[i, j] = 0;
+                    _board[i][j] = BoardCellValue.Empty;
                 }
             }
         }
 
         public void SetValueToPosition(BoardCellValue val, int x, int y)
         {
-            if (this._board[x, y] == BoardCellValue.Empty)
-                this._board[x, y] = val;
+            if (_board[x][y] == BoardCellValue.Empty)
+                _board[x][y] = val;
+        }
+
+        private bool CheckListElementsEquality<T>(List<T> list)
+        {
+            return list.All(o => o.Equals(list[0]));
         }
 
         public BoardCellValue CheckWinner()
         {
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < BoardResolution; i++)
             {
-                if (this._board[i, 0] == this._board[i, 1] && this._board[i, 2] == this._board[i, 1] &&
-                    this._board[i, 1] != BoardCellValue.Empty)
+                for (var j = 0; j <= BoardResolution - _numInRowForWin; j++)
                 {
-                    return this._board[i, 0];
-                }
+                    if (CheckRow(i, j))
+                    {
+                        return _board[i][j];
+                    }
 
-                if (this._board[0, i] == this._board[1, i] && this._board[2, i] == this._board[0, i] &&
-                    this._board[0, i] != BoardCellValue.Empty)
-                {
-                    return this._board[0, i];
+                    if (CheckCol(j, i))
+                    {
+                        return _board[j][i];
+                    }
                 }
             }
 
-            // check diags
-            if (this._board[0, 0] == this._board[1, 1] && this._board[2, 2] == this._board[1, 1] &&
-                this._board[1, 1] != BoardCellValue.Empty)
+            for (var i = 0; i <= BoardResolution - _numInRowForWin; i++)
             {
-                return this._board[1, 1];
+                for (var j = 0; j <= BoardResolution - _numInRowForWin; j++)
+                {
+                    if (CheckMainDiag(i, j))
+                    {
+                        return _board[i][j];
+                    }
+                }
             }
 
-            if (this._board[0, 2] == this._board[1, 1] && this._board[2, 0] == this._board[1, 1] &&
-                this._board[1, 1] != BoardCellValue.Empty)
+            for (var i = _numInRowForWin - 1; i <= BoardResolution - 1; i++)
             {
-                return this._board[1, 1];
+                for (var j = 0; j <= BoardResolution - _numInRowForWin; j++)
+                {
+                    if (CheckSecDiag(i, j))
+                    {
+                        return _board[i][j];
+                    }
+                }
             }
 
             return BoardCellValue.Empty;
         }
 
+        private bool CheckRow(int startX, int startY)
+        {
+            return _board[startX][startY] != BoardCellValue.Empty &&
+                   CheckListElementsEquality(_board[startX].GetRange(startY, _numInRowForWin));
+        }
+
+        private bool CheckCol(int startX, int startY)
+        {
+            for (int i = startX; i < startX + _numInRowForWin; i++)
+            {
+                if (_board[startX][startY] == BoardCellValue.Empty || _board[startX][startY] != _board[i][startY])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool CheckMainDiag(int startX, int startY)
+        {
+            for (int i = 0; i < _numInRowForWin; i++)
+            {
+                if (_board[startX][startY] == BoardCellValue.Empty ||
+                    _board[startX][startY] != _board[startX + i][startY + i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool CheckSecDiag(int startX, int startY)
+        {
+            for (int i = 0; i < _numInRowForWin; i++)
+            {
+                if (_board[startX][startY] == BoardCellValue.Empty ||
+                    _board[startX][startY] != _board[startX - i][startY + i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public bool IsMoveAllowed(int x, int y)
         {
-            return this._board[x, y] == BoardCellValue.Empty;
+            return _board[x][y] == BoardCellValue.Empty;
         }
 
         public List<Tuple<int, int>> GetAllowedMovesList()
         {
             var allowedMovesList = new List<Tuple<int, int>>();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < BoardResolution; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < BoardResolution; j++)
                 {
-                    if (this._board[i, j] == BoardCellValue.Empty)
+                    if (_board[i][j] == BoardCellValue.Empty)
                         allowedMovesList.Add(Tuple.Create(i, j));
                 }
             }

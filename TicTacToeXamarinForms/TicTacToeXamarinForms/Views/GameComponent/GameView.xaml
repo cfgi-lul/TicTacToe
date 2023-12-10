@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TicTacToeXamarinForms.Views.GameComponent.GameView">
+
+    <ContentView.Resources>
+        <StyleSheet Source="/Views/GameComponent/GameView.css" />
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <StackLayout Orientation="Vertical" HorizontalOptions="Center">
+            <Label HorizontalOptions="Center" StyleClass="default-text" x:Name="GameStat" />
+            <Label HorizontalOptions="Center" StyleClass="default-text" x:Name="GameTextView" />
+            <Label HorizontalOptions="Center" StyleClass="default-text" Text="TicTacToe" />
+            <StackLayout Orientation="Vertical" VerticalOptions="Start" StyleClass="buttons-wrapper"
+                         HorizontalOptions="Center" x:Name="BtnsWrapper" />
+            <Button Text="Start" Clicked="Reset" />
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

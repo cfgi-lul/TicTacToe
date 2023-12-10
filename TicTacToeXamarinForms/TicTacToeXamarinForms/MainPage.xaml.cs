@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TicTacToeXamarinForms.Views.GameComponent;
 using Xamarin.Forms;
 
 namespace TicTacToeXamarinForms
@@ -12,6 +8,14 @@ namespace TicTacToeXamarinForms
         public MainPage()
         {
             InitializeComponent();
+            GameView.Children.Add(new GameView(3));
+        }
+        
+        private void SliderValueChangeHandler(object sender, ValueChangedEventArgs e)
+        {
+            ((GameView) GameView.Children[0]).Destroy();
+            GameView.Children.Clear();
+            GameView.Children.Add(new GameView((int)e.NewValue + 3));
         }
     }
 }

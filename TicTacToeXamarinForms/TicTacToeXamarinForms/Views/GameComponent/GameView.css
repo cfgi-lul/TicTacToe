@@ -1,0 +1,37 @@
+.text {
+    color: #333;
+}
+
+.default-text {
+    font-size: 32;
+}
+
+.small-text {
+    font-size: 16;
+}
+
+.default-button {
+    color: #333;
+    background: #c8c8c8;
+    font-size: 34;
+    width: 122;
+    height: 122;
+}
+
+.s-button {
+    width: 89.5;
+    height: 89.5;
+}
+
+.xs-button {
+    width: 70;
+    height: 70;
+}
+
+.buttons-wrapper {
+    -xf-spacing: 8;
+}
+
+.button{
+    font-size: 34;
+}

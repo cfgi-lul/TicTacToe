@@ -10,6 +10,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="System.Reactive" Version="6.0.1-preview.1" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\GameComponent\GameView.xaml.cs">
+        <DependentUpon>GameView.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

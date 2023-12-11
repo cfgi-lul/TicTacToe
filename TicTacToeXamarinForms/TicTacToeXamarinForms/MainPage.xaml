@@ -3,15 +3,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:discreteSlider="clr-namespace:TicTacToeXamarinForms.Views.DiscreteSlider;assembly=TicTacToeXamarinForms"
-             x:Class="TicTacToeXamarinForms.MainPage">
+             x:Class="TicTacToeXamarinForms.MainPage" x:Name="MainContainer">
 
     <ContentPage.Resources>
         <StyleSheet Source="/MainPage.css" />
     </ContentPage.Resources>
 
     <StackLayout>
-        <StackLayout x:Name="GameView" />
-        <Label HorizontalOptions="Center" FontSize="16" Text="difficulty" />
+        <StackLayout x:Name="GameView" StyleClass="game-container" />
+        <Label HorizontalOptions="Center" FontSize="16" StyleClass="default-text" Text="difficulty" />
         <discreteSlider:DiscreteSlider Minimum="0" Maximum="2" ValueChanged="SliderValueChangeHandler" />
+        <StackLayout Orientation="Horizontal">
+            <Label HorizontalOptions="Center" FontSize="16" StyleClass="default-text" Text="dark mode" />
+            <Switch Toggled="ThemeToggleHandler" />
+        </StackLayout>
     </StackLayout>
 </ContentPage>

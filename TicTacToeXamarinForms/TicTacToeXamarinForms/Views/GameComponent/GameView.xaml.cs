@@ -58,10 +58,9 @@ namespace TicTacToeXamarinForms.Views.GameComponent
             {
                 var rowToAdd = new StackLayout
                 {
-                    StyleClass = new List<string>(),
+                    StyleClass = new List<string>{"buttons-wrapper"},
                     Orientation = StackOrientation.Horizontal
                 };
-                rowToAdd.StyleClass.Add("buttons-wrapper");
                 var curBtnsRow = new List<Button>();
                 for (var j = 0; j < _game.GetBoardResolution(); j++)
                 {
@@ -70,8 +69,7 @@ namespace TicTacToeXamarinForms.Views.GameComponent
                     var j1 = j;
                     curBtnsRow.Add(btnToAdd);
                     btnToAdd.Clicked += (o, e) => _game.MakeMove(i1, j1);
-                    btnToAdd.StyleClass = new List<string>();
-                    btnToAdd.StyleClass.Add("button");
+                    btnToAdd.StyleClass = new List<string>{"button"};
 
                     switch (_game.GetBoardResolution())
                     {

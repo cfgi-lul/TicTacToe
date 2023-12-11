@@ -1,7 +1,3 @@
-.text {
-    color: #333;
-}
-
 .default-text {
     font-size: 32;
 }
@@ -11,8 +7,6 @@
 }
 
 .default-button {
-    color: #333;
-    background: #c8c8c8;
     font-size: 34;
     width: 122;
     height: 122;
@@ -32,6 +26,7 @@
     -xf-spacing: 8;
 }
 
-.button{
+.button {
     font-size: 34;
 }
+

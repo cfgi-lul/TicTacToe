@@ -15,7 +15,7 @@
             <Label HorizontalOptions="Center" StyleClass="default-text" Text="TicTacToe" />
             <StackLayout Orientation="Vertical" VerticalOptions="Start" StyleClass="buttons-wrapper"
                          HorizontalOptions="Center" x:Name="BtnsWrapper" />
-            <Button Text="Start" Clicked="Reset" />
+            <Button Text="Start" Clicked="Reset" StyleClass="button" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

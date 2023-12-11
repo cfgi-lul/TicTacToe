@@ -1,0 +1,29 @@
+.game-container {
+    margin-bottom: 24;
+}
+
+.main-container {
+    background: #FDF7E4;
+}
+
+.main-container._dark {
+    background: #092635;
+}
+
+.default-text {
+    color: #BBAB8C;
+}
+
+.button {
+    color: #BBAB8C;
+    background: #DED0B6;
+}
+
+._dark .button {
+    color: #5C8374;
+    background: #9EC8B9;
+}
+
+._dark .default-text {
+    color: #5C8374;
+}

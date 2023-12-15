@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TicTacToeXamarinForms.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,6 +15,9 @@ namespace TicTacToeXamarinForms.Views.GameComponent
         private IDisposable _gameRunningSubscription;
         private IDisposable _gameStatSubscription;
         private IDisposable _gameStateChangedSubscription;
+        private string _startGameButtonText = "start";
+        private IDisposable _gameWinningCombination;
+
         public GameView(int gameDifficulty)
         {
             InitializeComponent();
@@ -21,30 +25,28 @@ namespace TicTacToeXamarinForms.Views.GameComponent
             PrepareView();
         }
 
-        
+
         private void Reset(object sender, EventArgs eventArgs)
         {
-            _game.ResetBoard();
+            _game.StopGame();
+            _btns.ForEach(btnRow => btnRow.ForEach(RemoveHighlight));
+            _game.StartGame();
         }
 
         private void RenderBoard()
         {
             var boardSnapshot = _game.GetBoard();
-            for (int i = 0; i < _game.GetBoardResolution(); i++)
+            for (var i = 0; i < _game.GetBoardResolution(); i++)
             {
-                for (int j = 0; j < _game.GetBoardResolution(); j++)
+                for (var j = 0; j < _game.GetBoardResolution(); j++)
                 {
-                    switch (boardSnapshot[i][j])
+                    if (boardSnapshot[i][j] == null)
                     {
-                        case BoardCellValue.O:
-                            _btns[i][j].Text = "O";
-                            break;
-                        case BoardCellValue.X:
-                            _btns[i][j].Text = "X";
-                            break;
-                        default:
-                            _btns[i][j].Text = "";
-                            break;
+                        _btns[i][j].Text = "";
+                    }
+                    else
+                    {
+                        _btns[i][j].Text = boardSnapshot[i][j].ToString();
                     }
                 }
             }
@@ -58,7 +60,7 @@ namespace TicTacToeXamarinForms.Views.GameComponent
             {
                 var rowToAdd = new StackLayout
                 {
-                    StyleClass = new List<string>{"buttons-wrapper"},
+                    StyleClass = new List<string> {"buttons-wrapper"},
                     Orientation = StackOrientation.Horizontal
                 };
                 var curBtnsRow = new List<Button>();
@@ -68,8 +70,8 @@ namespace TicTacToeXamarinForms.Views.GameComponent
                     var i1 = i;
                     var j1 = j;
                     curBtnsRow.Add(btnToAdd);
-                    btnToAdd.Clicked += (o, e) => _game.MakeMove(i1, j1);
-                    btnToAdd.StyleClass = new List<string>{"button"};
+                    btnToAdd.Clicked += (o, e) => _game.MakeMove(new Tuple<int, int>(i1, j1));
+                    btnToAdd.StyleClass = new List<string> {"button"};
 
                     switch (_game.GetBoardResolution())
                     {
@@ -124,8 +126,20 @@ namespace TicTacToeXamarinForms.Views.GameComponent
                 }
             });
 
-            _gameStatSubscription = _game.GameStat.Subscribe(x => GameStat.Text = $"X : {x.Item1} | {x.Item2} : O");
+            _gameStatSubscription = _game.GameStat
+                .Subscribe(x => GameStat.Text =
+                    String.Join(" | ", x.Aggregate(new List<String>(), (acc, cur) =>
+                    {
+                        acc.Add($"{cur.Item1}: {cur.Item2}");
+                        return acc;
+                    })));
             _gameStateChangedSubscription = _game.GameStateChanged.Subscribe((x) => RenderBoard());
+
+            _gameWinningCombination = _game.WinningCombination
+                .Subscribe(winCoords =>
+                {
+                    winCoords.ForEach(coord => { AddHighlight(_btns[coord.Item1][coord.Item2]); });
+                });
         }
 
         public void Destroy()
@@ -138,6 +152,19 @@ namespace TicTacToeXamarinForms.Views.GameComponent
             _gameRunningSubscription.Dispose();
             _gameStatSubscription.Dispose();
             _gameStateChangedSubscription.Dispose();
+            _gameWinningCombination.Dispose();
+        }
+
+        private void AddHighlight(View view)
+        {
+            view.StyleClass.Add("_highlight");
+            view.StyleClass = new List<string>(view.StyleClass);
+        }
+
+        private void RemoveHighlight(View view)
+        {
+            if (view.StyleClass.Remove("_highlight"))
+                view.StyleClass = new List<string>(view.StyleClass);
         }
     }
 }

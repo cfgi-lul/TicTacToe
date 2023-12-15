@@ -14,8 +14,7 @@ namespace TicTacToeXamarinForms.Views.DiscreteSlider
 
         private void OnDiscreteSliderValueChanged(object sender, ValueChangedEventArgs e)
         {
-            var newValue = Minimum + StepValue * (int)Math.Round((e.NewValue - Minimum) / StepValue);
-            Value = Math.Max(Minimum, Math.Min(Maximum, newValue));
+                Value = Math.Max(Minimum, Math.Min(Maximum, Minimum + StepValue * (int) Math.Round((e.NewValue - Minimum) / StepValue)));
         }
     }
 }

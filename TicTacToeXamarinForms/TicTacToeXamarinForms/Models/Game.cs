@@ -1,36 +1,56 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Subjects;
 
 namespace TicTacToeXamarinForms.Models
 {
     public class Game
     {
-        private BoardCellValue _turn = BoardCellValue.O;
         private readonly Board _board;
-
-        public BehaviorSubject<Tuple<int, int>> GameStat { get; } =
-            new BehaviorSubject<Tuple<int, int>>(new Tuple<int, int>(0, 0));
-
+        private List<Player> _players;
+        private int _curPlayerIndex;
+        public BehaviorSubject<List<Tuple<string, int>>> GameStat { get; }
         public string GameText { get; private set; } = "";
         public BehaviorSubject<bool> GameRunning { get; } = new BehaviorSubject<bool>(false);
+
+        public Subject<List<Tuple<int, int>>> WinningCombination { get; } =
+            new Subject<List<Tuple<int, int>>>();
+
         public Subject<bool> GameStateChanged { get; } = new Subject<bool>();
 
         public Game(int boardResolution)
         {
             _board = new Board(boardResolution);
+            _players = new List<Player>();
+            AddNewPlayer(new Player('X', false));
+            AddNewPlayer(new Player('O'));
+            // AddNewPlayer(new Player('Y'));
+            // AddNewPlayer(new Player('Z'));
+            // AddNewPlayer(new Player('Q'));
+            // AddNewPlayer(new Player('W'));
+            GameStat = new BehaviorSubject<List<Tuple<string, int>>>(GetNewStat());
+            _curPlayerIndex = 0;
         }
 
-        public List<List<BoardCellValue>> GetBoard()
+        public void AddNewPlayer(Player player)
+        {
+            _players.Add(player);
+        }
+
+        public List<List<char?>> GetBoard()
         {
             return _board.GetBoard();
         }
 
-        private void StartGame()
+        public void StartGame()
         {
-            GameText = "Turn is " + _turn;
+            _board.ClearBoard();
+            GameText = "Turn is " + _players[_curPlayerIndex].Symbol;
             GameRunning.OnNext(true);
             GameStateChanged.OnNext(true);
+            if (_players[_curPlayerIndex].IsComputerMode)
+                MakeMove(GetComputerMove());
         }
 
         public int GetBoardResolution()
@@ -38,60 +58,64 @@ namespace TicTacToeXamarinForms.Models
             return _board.BoardResolution;
         }
 
-        private void StopGame()
+        public void StopGame()
         {
             GameRunning.OnNext(false);
         }
 
-        public void ResetBoard()
-        {
-            StopGame();
-            _board.ClearBoard();
-            this._turn = BoardCellValue.O;
-            GameStateChanged.OnNext(true);
-            StartGame();
-        }
-
         private bool IsGameShouldBeStopped()
         {
-            return _board.CheckWinner() != BoardCellValue.Empty ||
+            return _board.CheckWinner() != null ||
                    _board.GetAllowedMovesList().Count == 0;
         }
 
-        public void MakeMove(int x, int y)
+        public void MakeMove(Tuple<int, int> coords)
         {
-            if (_board.IsMoveAllowed(x, y))
-            {
-                _board.SetValueToPosition(_turn, x, y);
-                _turn = _turn == BoardCellValue.O ? BoardCellValue.X : BoardCellValue.O;
-                GameText = "Turn is " + _turn;
-                GameStateChanged.OnNext(true);
-            }
+            if (_board.IsMoveAllowed(coords.Item1, coords.Item2))
+                _board.SetValueToPosition(_players[_curPlayerIndex].Symbol, coords.Item1, coords.Item2);
 
             if (IsGameShouldBeStopped())
             {
                 StopGame();
-                if (_board.CheckWinner() != BoardCellValue.Empty)
+                if (_board.CheckWinner() != null)
                 {
-                    var winner = (_turn == BoardCellValue.O ? BoardCellValue.X : BoardCellValue.O);
+                    var winner = _players[_curPlayerIndex].Symbol;
+                    _players[_curPlayerIndex].WinCount++;
                     GameText = "Winner is " + winner;
-                    EmitNewStat(winner);
+                    WinningCombination.OnNext(_board.WinCombination);
+                    GameStat.OnNext(GetNewStat());
                 }
                 else
-                {
                     GameText = "It's a toe";
-                }
-
-                GameStateChanged.OnNext(true);
             }
+            else
+                SetNextPlayer();
+
+            GameStateChanged.OnNext(true);
         }
 
-        private void EmitNewStat(BoardCellValue winner)
+        private void SetNextPlayer()
         {
-            var prevStat = GameStat.Value;
-            GameStat.OnNext(winner == BoardCellValue.O
-                ? new Tuple<int, int>(prevStat.Item1, prevStat.Item2 + 1)
-                : new Tuple<int, int>(prevStat.Item1 + 1, prevStat.Item2));
+            _curPlayerIndex = (_curPlayerIndex + 1) % _players.Count;
+            GameText = "Turn is " + _players[_curPlayerIndex].Symbol;
+            if (_players[_curPlayerIndex].IsComputerMode)
+                MakeMove(GetComputerMove());
+        }
+
+        private List<Tuple<string, int>> GetNewStat()
+        {
+            return _players.Aggregate(new List<Tuple<String, int>>(), (acc, cur) =>
+            {
+                acc.Add(new Tuple<string, int>(cur.Symbol.ToString(), cur.WinCount));
+                return acc;
+            });
+        }
+
+        private Tuple<int, int> GetComputerMove()
+        {
+            var allowedMovesList = _board.GetAllowedMovesList();
+            Random r = new Random();
+            return allowedMovesList[r.Next(0, allowedMovesList.Count)];
         }
     }
 }

@@ -10,12 +10,12 @@
 
     <ContentView.Content>
         <StackLayout Orientation="Vertical" HorizontalOptions="Center">
-            <Label HorizontalOptions="Center" StyleClass="default-text" x:Name="GameStat" />
             <Label HorizontalOptions="Center" StyleClass="default-text" x:Name="GameTextView" />
             <Label HorizontalOptions="Center" StyleClass="default-text" Text="TicTacToe" />
             <StackLayout Orientation="Vertical" VerticalOptions="Start" StyleClass="buttons-wrapper"
                          HorizontalOptions="Center" x:Name="BtnsWrapper" />
-            <Button Text="Start" Clicked="Reset" StyleClass="button" />
+            <Button Text="Start" Clicked="Reset" StyleClass="button" x:Name="StartGameBtn"/>
+            <Label HorizontalOptions="Center" StyleClass="default-text" x:Name="GameStat" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

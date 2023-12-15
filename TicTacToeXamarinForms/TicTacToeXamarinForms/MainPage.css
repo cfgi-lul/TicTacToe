@@ -2,12 +2,14 @@
     margin-bottom: 24;
 }
 
+/* light */
+/*#FDF7E4 для бэкграунда*/
+/*#DED0B6 для подсвечивания выйгрышной комбинации*/
+/*#FAEED1 для кнопок */
+/*#BBAB8C для текста */
+
 .main-container {
     background: #FDF7E4;
-}
-
-.main-container._dark {
-    background: #092635;
 }
 
 .default-text {
@@ -16,14 +18,32 @@
 
 .button {
     color: #BBAB8C;
+    background: #FAEED1;
+}
+
+.button._highlight {
     background: #DED0B6;
 }
 
-._dark .button {
-    color: #5C8374;
-    background: #9EC8B9;
+/* dark */
+/*#092635 для бэкграунда*/
+/*#5C8374 для подсвечивания выйгрышной комбинации*/
+/*#1B4242 для кнопок */
+/*#9EC8B9 для текста */
+
+.main-container._dark {
+    background: #092635;
 }
 
 ._dark .default-text {
-    color: #5C8374;
+    color: #9EC8B9;
+}
+
+._dark .button {
+    color: #9EC8B9;
+    background: #1B4242;
+}
+
+._dark .button._highlight {
+    background: #5C8374;
 }

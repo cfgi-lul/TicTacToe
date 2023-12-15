@@ -7,13 +7,14 @@ namespace TicTacToeXamarinForms.Models
     public class Board
     {
         public int BoardResolution { get; }
-        private readonly List<List<BoardCellValue>> _board;
+        public List<Tuple<int, int>> WinCombination { get; private set; }
+        private readonly List<List<char?>> _board;
         private readonly int _numInRowForWin;
 
         public Board(int boardResolution)
         {
             BoardResolution = boardResolution;
-            _board = new List<List<BoardCellValue>>(BoardResolution);
+            _board = new List<List<char?>>(BoardResolution);
             _numInRowForWin = boardResolution == 3 ? 3 : 4;
             FillBoard();
         }
@@ -22,15 +23,15 @@ namespace TicTacToeXamarinForms.Models
         {
             for (var i = 0; i < BoardResolution; i++)
             {
-                _board.Add(new List<BoardCellValue>(BoardResolution));
+                _board.Add(new List<char?>(BoardResolution));
                 for (var j = 0; j < BoardResolution; j++)
                 {
-                    _board[i].Add(BoardCellValue.Empty);
+                    _board[i].Add(null);
                 }
             }
         }
 
-        public List<List<BoardCellValue>> GetBoard()
+        public List<List<char?>> GetBoard()
         {
             return _board;
         }
@@ -41,14 +42,14 @@ namespace TicTacToeXamarinForms.Models
             {
                 for (int j = 0; j < BoardResolution; j++)
                 {
-                    _board[i][j] = BoardCellValue.Empty;
+                    _board[i][j] = null;
                 }
             }
         }
 
-        public void SetValueToPosition(BoardCellValue val, int x, int y)
+        public void SetValueToPosition(char val, int x, int y)
         {
-            if (_board[x][y] == BoardCellValue.Empty)
+            if (_board[x][y] == null)
                 _board[x][y] = val;
         }
 
@@ -57,7 +58,7 @@ namespace TicTacToeXamarinForms.Models
             return list.All(o => o.Equals(list[0]));
         }
 
-        public BoardCellValue CheckWinner()
+        public char? CheckWinner()
         {
             for (var i = 0; i < BoardResolution; i++)
             {
@@ -65,11 +66,13 @@ namespace TicTacToeXamarinForms.Models
                 {
                     if (CheckRow(i, j))
                     {
+                        SetWinRow(i, j);
                         return _board[i][j];
                     }
 
                     if (CheckCol(j, i))
                     {
+                        SetWinCol(j, i);
                         return _board[j][i];
                     }
                 }
@@ -81,6 +84,7 @@ namespace TicTacToeXamarinForms.Models
                 {
                     if (CheckMainDiag(i, j))
                     {
+                        SetWinMainDiag(i, j);
                         return _board[i][j];
                     }
                 }
@@ -92,17 +96,18 @@ namespace TicTacToeXamarinForms.Models
                 {
                     if (CheckSecDiag(i, j))
                     {
+                        SetWinSecDiag(i, j);
                         return _board[i][j];
                     }
                 }
             }
 
-            return BoardCellValue.Empty;
+            return null;
         }
 
         private bool CheckRow(int startX, int startY)
         {
-            return _board[startX][startY] != BoardCellValue.Empty &&
+            return _board[startX][startY] != null &&
                    CheckListElementsEquality(_board[startX].GetRange(startY, _numInRowForWin));
         }
 
@@ -110,7 +115,7 @@ namespace TicTacToeXamarinForms.Models
         {
             for (var i = startX; i < startX + _numInRowForWin; i++)
             {
-                if (_board[startX][startY] == BoardCellValue.Empty || _board[startX][startY] != _board[i][startY])
+                if (_board[startX][startY] == null || _board[startX][startY] != _board[i][startY])
                 {
                     return false;
                 }
@@ -123,7 +128,7 @@ namespace TicTacToeXamarinForms.Models
         {
             for (var i = 0; i < _numInRowForWin; i++)
             {
-                if (_board[startX][startY] == BoardCellValue.Empty ||
+                if (_board[startX][startY] == null ||
                     _board[startX][startY] != _board[startX + i][startY + i])
                 {
                     return false;
@@ -137,7 +142,7 @@ namespace TicTacToeXamarinForms.Models
         {
             for (var i = 0; i < _numInRowForWin; i++)
             {
-                if (_board[startX][startY] == BoardCellValue.Empty ||
+                if (_board[startX][startY] == null ||
                     _board[startX][startY] != _board[startX - i][startY + i])
                 {
                     return false;
@@ -149,7 +154,7 @@ namespace TicTacToeXamarinForms.Models
 
         public bool IsMoveAllowed(int x, int y)
         {
-            return _board[x][y] == BoardCellValue.Empty;
+            return _board[x][y] == null;
         }
 
         public List<Tuple<int, int>> GetAllowedMovesList()
@@ -160,12 +165,48 @@ namespace TicTacToeXamarinForms.Models
             {
                 for (var j = 0; j < BoardResolution; j++)
                 {
-                    if (_board[i][j] == BoardCellValue.Empty)
+                    if (_board[i][j] == null)
                         allowedMovesList.Add(Tuple.Create(i, j));
                 }
             }
 
             return allowedMovesList;
+        }
+
+        private void SetWinRow(int x, int y)
+        {
+            WinCombination = Enumerable.Range(0, _numInRowForWin).Aggregate(new List<Tuple<int, int>>(), (acc, cur) =>
+            {
+                acc.Add(new Tuple<int, int>(x, y + cur));
+                return acc;
+            });
+        }
+
+        private void SetWinCol(int x, int y)
+        {
+            WinCombination = Enumerable.Range(0, _numInRowForWin).Aggregate(new List<Tuple<int, int>>(), (acc, cur) =>
+            {
+                acc.Add(new Tuple<int, int>(x + cur, y));
+                return acc;
+            });
+        }
+
+        private void SetWinMainDiag(int x, int y)
+        {
+            WinCombination = Enumerable.Range(0, _numInRowForWin).Aggregate(new List<Tuple<int, int>>(), (acc, cur) =>
+            {
+                acc.Add(new Tuple<int, int>(x + cur, y + cur));
+                return acc;
+            });
+        }
+
+        private void SetWinSecDiag(int x, int y)
+        {
+            WinCombination = Enumerable.Range(0, _numInRowForWin).Aggregate(new List<Tuple<int, int>>(), (acc, cur) =>
+            {
+                acc.Add(new Tuple<int, int>(x - cur, y + cur));
+                return acc;
+            });
         }
     }
 }

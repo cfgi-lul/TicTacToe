@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using TicTacToeXamarinForms.Views.GameComponent;
 using Xamarin.Forms;
 
@@ -11,7 +10,7 @@ namespace TicTacToeXamarinForms
         {
             InitializeComponent();
             GameView.Children.Add(new GameView(3));
-            MainContainer.StyleClass = new ObservableCollection<string>{"main-container"};
+            MainContainer.StyleClass = new List<string>{"main-container"};
         }
         
         private void SliderValueChangeHandler(object sender, ValueChangedEventArgs e)

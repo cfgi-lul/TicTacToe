@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TicTacToeXamarinForms.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,7 +16,6 @@ namespace TicTacToeXamarinForms.Views.GameComponent
         private IDisposable _gameRunningSubscription;
         private IDisposable _gameStatSubscription;
         private IDisposable _gameStateChangedSubscription;
-        private string _startGameButtonText = "start";
         private IDisposable _gameWinningCombination;
 
         public GameView(int gameDifficulty)
@@ -165,6 +165,13 @@ namespace TicTacToeXamarinForms.Views.GameComponent
         {
             if (view.StyleClass.Remove("_highlight"))
                 view.StyleClass = new List<string>(view.StyleClass);
+        }
+
+        private async void OnAppNameTap(object _, EventArgs e)
+        {
+            await AppNameLabel.ScaleTo(0.9, 25, Easing.SinOut);
+            await AppNameLabel.ScaleTo(1.1, 25, Easing.SinIn);
+            await AppNameLabel.ScaleTo(1, 50, Easing.SpringOut);
         }
     }
 }

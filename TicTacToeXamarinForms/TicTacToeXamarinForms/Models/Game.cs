@@ -71,8 +71,10 @@ namespace TicTacToeXamarinForms.Models
 
         public void MakeMove(Tuple<int, int> coords)
         {
-            if (_board.IsMoveAllowed(coords.Item1, coords.Item2))
-                _board.SetValueToPosition(_players[_curPlayerIndex].Symbol, coords.Item1, coords.Item2);
+            if (!_board.IsMoveAllowed(coords.Item1, coords.Item2))
+                return;
+                
+            _board.SetValueToPosition(_players[_curPlayerIndex].Symbol, coords.Item1, coords.Item2);
 
             if (IsGameShouldBeStopped())
             {
@@ -104,7 +106,7 @@ namespace TicTacToeXamarinForms.Models
 
         private List<Tuple<string, int>> GetNewStat()
         {
-            return _players.Aggregate(new List<Tuple<String, int>>(), (acc, cur) =>
+            return _players.Aggregate(new List<Tuple<string, int>>(), (acc, cur) =>
             {
                 acc.Add(new Tuple<string, int>(cur.Symbol.ToString(), cur.WinCount));
                 return acc;
@@ -114,7 +116,7 @@ namespace TicTacToeXamarinForms.Models
         private Tuple<int, int> GetComputerMove()
         {
             var allowedMovesList = _board.GetAllowedMovesList();
-            Random r = new Random();
+            var r = new Random();
             return allowedMovesList[r.Next(0, allowedMovesList.Count)];
         }
     }

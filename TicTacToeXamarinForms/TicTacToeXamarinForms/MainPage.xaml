@@ -15,7 +15,7 @@
         <discreteSlider:DiscreteSlider Minimum="0" Maximum="2" ValueChanged="SliderValueChangeHandler" />
         <StackLayout Orientation="Horizontal">
             <Label HorizontalOptions="Center" FontSize="16" StyleClass="default-text" Text="dark mode" />
-            <Switch Toggled="ThemeToggleHandler" />
+            <Switch x:Name="ThemeToggle" Toggled="ThemeToggleHandler" />
         </StackLayout>
     </StackLayout>
 </ContentPage>

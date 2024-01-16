@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TicTacToeXamarinForms.Views.GameComponent;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace TicTacToeXamarinForms
 {
@@ -10,7 +12,17 @@ namespace TicTacToeXamarinForms
         {
             InitializeComponent();
             GameView.Children.Add(new GameView(3));
-            MainContainer.StyleClass = new List<string>{"main-container"};
+
+            var classes = new List<string>() {"main-container" };
+            
+            var themeFromPreferences = Preferences.Get("theme", "default");
+            if (themeFromPreferences == "dark")
+            {
+                ThemeToggle.IsToggled = true;
+                classes.Add("_dark");
+            }
+
+            MainContainer.StyleClass = classes;
         }
         
         private void SliderValueChangeHandler(object sender, ValueChangedEventArgs e)
@@ -20,9 +32,18 @@ namespace TicTacToeXamarinForms
             GameView.Children.Add(new GameView((int)e.NewValue + 3));
         }
 
-        private void ThemeToggleHandler(object sender, ToggledEventArgs e)
+        private void ThemeToggleHandler(object sender, ToggledEventArgs toggleEvent)
         {
-            MainContainer.StyleClass = e.Value ? new List<string>{"main-container", "_dark"} : new List<string>{"main-container"};
+            if (toggleEvent.Value)
+            {
+                MainContainer.StyleClass = new List<string>{"main-container", "_dark"};
+                Preferences.Set("theme", "dark");
+            }
+            else
+            {
+                MainContainer.StyleClass = new List<string>{"main-container"};
+                Preferences.Set("theme", "default");
+            }
         }
     }
 }
